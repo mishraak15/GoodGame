@@ -4,30 +4,16 @@ import axios from "axios";
 import Card from "./components/Card/Card";
 
 function App() {
-  const [fullData, setFullData] = useState([]);
+  const [quote, setQuote] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchValue, setSearchValue] = useState("");
 
   function fetchFullData() {
+    // let url = process.env.REACT_APP_URL;
     setLoading(true);
     axios
-      .get("https://pokeapi.co/api/v2/pokemon")
+      .get("https://ron-swanson-quotes.herokuapp.com/v2/quotes")
       .then((res) => {
-        
-        let value = searchValue.toLowerCase().trim();
-
-        if (value === "") {
-          setFullData(res.data.results);
-        } else {
-          let newData = [];
-          res.data.results.forEach((d) => {
-            if (d?.name.includes(value)) {
-              newData.push(d);
-            }
-          });
-
-          setFullData(newData);
-        }
+        setQuote((pre) => [...pre, res?.data[0]]);
         setLoading(false);
       })
       .catch((err) => console.log(err));
@@ -35,42 +21,47 @@ function App() {
 
   useEffect(() => {
     fetchFullData();
+    fetchFullData();
   }, []);
 
   if (loading) {
     return <h1 style={{ textAlign: "center" }}>Loading...</h1>;
+  } else {
+    return (
+      <div className="App">
+        <div className="top-box">
+          <span className="head">Quote for you!!</span>
+          <span
+            className="new-btn"
+            onClick={() => {
+              setQuote([]);
+              fetchFullData();
+            }}
+          >
+            New Quote
+          </span>
+        </div>
+        <div className="quote-box">
+          {quote?.map((d, index) => (
+            <Card key={index} data={d} />
+          ))}
+        </div>
+
+        <span className="head">Saved Quote!!</span>
+
+        <div className="quote-box">
+          {localStorage?.getItem("saved") === null ||
+          JSON.parse(localStorage?.getItem("saved")).length === 0 ? (
+            <h3>NO Saved Quotes!</h3>
+          ) : (
+            JSON.parse(localStorage?.getItem("saved")).map((s, index) => (
+              <Card key={index} data={s} saved={true} />
+            ))
+          )}
+        </div>
+      </div>
+    );
   }
-
-  return (
-    <div className="App">
-      <h2>Pokemons Assemble!!</h2>
-      <div className="searchbar">
-        <input
-          type="text"
-          name="search"
-          id="search"
-          placeholder="Enter Pokemon name to search"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-        <button
-          onClick={() => {
-            fetchFullData();
-          }}
-        >
-          Search
-        </button>
-      </div>
-
-      <div className="data-container">
-        {fullData?.length === 0 ? (
-          <h2>No Match Found!!</h2>
-        ) : (
-          fullData?.map((d, index) => <Card key={index} data={d} />)
-        )}
-      </div>
-    </div>
-  );
 }
 
 export default App;

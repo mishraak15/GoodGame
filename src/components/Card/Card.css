@@ -1,11 +1,9 @@
 .Card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* width: 28%; */
-  gap: 6px;
+  width: 40%;
+  min-width: 300px;
   border-radius: 6px;
   padding: 1em;
+  margin: 10px;
   background-color: #f3f3f3;
   position: relative;
 }
@@ -13,67 +11,21 @@
 .Card:hover {
   box-shadow: 3px 3px 15px #c7c7c7;
   background-color: #ececec;
+}
+
+.icon {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  font-size: 1.5em;
   cursor: pointer;
 }
 
-.Card img {
-  align-self: center;
-  height: 100%;
-  image-rendering: pixelated;
-}
-
-.pokemon-name {
-  font-size: 2em;
-  text-transform: capitalize;
-  font-weight: 500;
-  align-self: center;
-}
-
-.height-width-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.height-width-container div,
-.pokemon-experience {
-  font-size: 1.2em;
-}
-
-.height-width-container div span,
-.pokemon-experience span {
-  font-weight: bold;
-}
-
-.pokemon-stats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-column-gap: 1em;
-}
-
-.pokemon-order {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  border-radius: 50%;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 35px;
-  width: 35px;
-  border: 1px solid grey;
-}
-
-@media screen and (max-width: 360px) {
+@media screen and (max-width: 700px) {
   .Card {
-    width: 100%;
+    width: 80%;
   }
-  .pokemon-stats {
-    grid-template-columns: repeat(1, 1fr);
-  }
-  .searchbar input {
-    width: 62%;
+  .top-box{
+    flex-direction: column;
   }
 }

@@ -1,43 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Card.css";
-import axios from "axios";
-import Stat from "../Stat/Stat";
+import { AiOutlineLike } from "react-icons/ai";
+import { AiFillLike } from "react-icons/ai";
 
-export default function Card({ data }) {
-  const [cardData, setCardData] = useState({});
-  useEffect(() => {
-    axios
-      .get(data?.url)
-      .then((res) => {
-        setCardData(res?.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+export default function Card({ data, saved = false }) {
+  const [liked, setLiked] = useState(saved);
+
+  function addClickHandler() {
+    setLiked(true);
+    let saved = localStorage.getItem("saved");
+    if (saved == null) {
+      localStorage.setItem("saved", JSON.stringify([data]));
+    } else {
+      let s = JSON?.parse(saved);
+      s.push(data);
+      localStorage.setItem("saved", JSON.stringify(s));
+    }
+  }
+
+  function removeClickHandler() {
+    setLiked(false);
+    let saved = localStorage.getItem("saved");
+    let s = JSON?.parse(saved);
+    s = s.filter((d) => d != data);
+    localStorage.setItem("saved", JSON.stringify(s));
+    console.log(s);
+  }
 
   return (
     <div className="Card">
-      <img src={cardData?.sprites?.front_default} alt="pokemon..." />
-      <div className="pokemon-name">{cardData?.name}</div>
-
-      <div className="height-width-container">
-        <div>
-          Height: <span>{cardData?.height}</span>
-        </div>
-        <div>
-          Weight: <span>{cardData?.weight}</span>
-        </div>
-      </div>
-
-      <div className="pokemon-experience">
-        Experience: <span>{cardData?.base_experience}</span>
-      </div>
-      <div className="head">Stats: </div>
-      <div className="pokemon-stats">
-        {cardData?.stats?.map((d, index) => (
-          <Stat key={index} strength={d?.base_stat} name={d?.stat?.name} />
-        ))}
-      </div>
-      <div className="pokemon-order">{cardData?.order}</div>
+      <h2>{data}</h2>
+      {liked ? (
+        <AiFillLike className="icon" onClick={() => removeClickHandler()} />
+      ) : (
+        <AiOutlineLike className="icon" onClick={() => addClickHandler()} />
+      )}
     </div>
   );
 }
